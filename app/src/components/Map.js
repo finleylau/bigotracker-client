@@ -66,6 +66,9 @@ export default class Map extends React.Component {
 
     if (prevProps.map !== this.props.map) {
       this.renderAutoComplete();
+
+      // get reports
+      this.props.getReports()
     }
   }
 
@@ -90,6 +93,9 @@ export default class Map extends React.Component {
         map.setCenter(place.geometry.location);
       }
 
+
+
+
       this.setState({
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng()
@@ -99,6 +105,8 @@ export default class Map extends React.Component {
 
   // move the map to point to the new location
   recenterMap() {
+    if (!this.props.google || !this.map) return;
+
     const map = this.map;
     const curr = this.state.currentLocation;
 
@@ -115,6 +123,7 @@ export default class Map extends React.Component {
   // load the google map
   loadMap() {
     if (this.props && this.props.google) {
+
       // make sure that google is available
       const {google} = this.props;
       const maps = google.maps;
@@ -146,7 +155,6 @@ export default class Map extends React.Component {
       this.renderAutoComplete()
       this.forceUpdate();
     }
-    // ...
   }
 
   renderChildren() {

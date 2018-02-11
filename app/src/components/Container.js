@@ -4,6 +4,7 @@ import Map from './Map';
 import Marker from './Marker';
 import InfoWindow from './InfoWindow';
 import ReactDOM from 'react-dom';
+import axios from 'axios';
 
 export class Container extends React.Component {
   constructor(props) {
@@ -12,9 +13,16 @@ export class Container extends React.Component {
     this.state = {
       showingInfoWindow: false,
       activeMarker: {},
-      selectedPlace: {}
+      selectedPlace: {},
+      reports: this.getReports()
     }
 
+  }
+
+  getReports() {
+    axios.get(`http://localhost:5000/reports`).then(res => {
+      return res.data
+    })
   }
 
   onMarkerClick(props, marker, e) {
@@ -62,7 +70,6 @@ export class Container extends React.Component {
         width: '100vw'
       }
     }
-    const pos = {lat: 37.759703, lng: -122.428093}
 
     return (
       <div>
@@ -71,13 +78,22 @@ export class Container extends React.Component {
             google={this.props.google}
             onClick={this.onMapClick.bind(this)}
             onDragend={this.onMapDragend.bind(this)}
+            getReports={this.getReports.bind(this)}
             >
 
-            <Marker
-              position={pos}
-              onClick={this.onMarkerClick.bind(this)}
-              name={"Dolores Park"}
-              />
+            {
+              this.state.reports ?
+              this.state.reports.map(report => {
+              var pos = {lat: report.lat, lng: report.lng}
+              return (
+                <Marker
+                  key={report.id}
+                  position={pos}
+                  onClick={this.onMarkerClick.bind(this)}
+                  />
+                )
+              }) : <div></div>
+            }
 
             <InfoWindow
               marker={this.state.activeMarker}
