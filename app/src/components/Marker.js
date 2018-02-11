@@ -34,7 +34,6 @@ export default class Marker extends React.Component {
     // initialize the position
     let pos = position || mapCenter;
     position = new google.maps.LatLng(pos.lat, pos.lng);
-    console.log(position);
     // create the marker
     const pref = {
       map: map,

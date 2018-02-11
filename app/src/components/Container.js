@@ -14,14 +14,20 @@ export class Container extends React.Component {
       showingInfoWindow: false,
       activeMarker: {},
       selectedPlace: {},
-      reports: this.getReports()
+      reports: []
     }
 
   }
 
+  componentDidMount() {
+    this.getReports();
+  }
+
   getReports() {
     axios.get(`http://localhost:5000/reports`).then(res => {
-      return res.data
+      this.setState({
+        reports: res.data
+      })
     })
   }
 
@@ -70,7 +76,7 @@ export class Container extends React.Component {
         width: '100vw'
       }
     }
-
+    const { reports } = this.state;
     return (
       <div>
         <div style={styles.mapDiv}>
@@ -82,8 +88,7 @@ export class Container extends React.Component {
             >
 
             {
-              this.state.reports ?
-              this.state.reports.map(report => {
+              reports && reports.map(report => {
               var pos = {lat: report.lat, lng: report.lng}
               return (
                 <Marker
@@ -92,8 +97,10 @@ export class Container extends React.Component {
                   onClick={this.onMarkerClick.bind(this)}
                   />
                 )
-              }) : <div></div>
+              })
             }
+
+            <Marker pos={{lat: 30.9, lng: -87.4}} onClick={this.onMarkerClick.bind(this)} />
 
             <InfoWindow
               marker={this.state.activeMarker}

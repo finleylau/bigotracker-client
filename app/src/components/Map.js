@@ -103,7 +103,7 @@ export default class Map extends React.Component {
     })
   }
 
-  // move the map to point to the new location
+  // move the map to point to the  new location
   recenterMap() {
     if (!this.props.google || !this.map) return;
 
@@ -162,13 +162,14 @@ export default class Map extends React.Component {
 
       if (!children) return;
 
-      return React.Children.map(children, c => {
+      var result = React.Children.map(this.props.children, c => {
         return React.cloneElement(c, {
           map: this.map,
           google: this.props.google,
           mapCenter: this.state.currentLocation
         });
       });
+      return result;
   }
 
   render() {
